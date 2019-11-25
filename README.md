@@ -1,5 +1,7 @@
+### This does not work yet, as of 2019 Nov 25.
+
 # Resource Pack Shuffler
- A Python script that shuffles Minecraft resource packs, which creates cursed resource/texture packs.
+ *This is a Python script that shuffles Minecraft resource packs, creating cursed resource/texture packs.*
 
 **1. You need to install the latest version of Python to run the Shuffler.**
 
@@ -14,6 +16,6 @@ Made by Tyler Jones (SkydiverTyler)
 
 https://twitter.com/skydivertyler
 
-Please credit me, and link to the github project, if you use this in a YouTube video, or if you redistribute this program.
+Please credit me, and link to this project, if you use this in a YouTube video, or if you redistribute this program.
 
 This project is provided as-is without warranty.
