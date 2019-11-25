@@ -1,20 +1,14 @@
 # IF YOU SEE THIS, AND YOU ARE TRYING TO RUN THE SHUFFLER,
-# YOU PROBABLY DON'T HAVE PYTHON INSTALLED.
-# YOU WILL NEED TO INSTALL PYTHON TO RUN THE SHUFFLER.
-
-# GET PYTHON AT:
-# https://www.python.org/downloads/
-
-# WHEN SETTING UP PYTHON, MAKE SURE TO CHECK "Add Python _._ to PATH"
-# SEE THIS IMAGE FOR MORE INFORMATION:
-# https://datatofish.com/wp-content/uploads/2018/10/0001_add_Python_to_Path.png
+# PLEASE OPEN THE "README.MD" FILE IN A TEXT EDITOR
+# FOR HELP
 
 # Credits
-# Made by Tyler Jones (SkydiverTyler)
-# https://twitter.com/skydivertyler
-# Please credit me, and link to the github project,
-# if you use this in a YouTube video,
-# or if you redistribute this program.
+    # Made by Tyler Jones (SkydiverTyler)
+    # https://twitter.com/skydivertyler
+    # Please credit me, and link to the github project,
+    # if you use this in a YouTube video,
+    # or if you redistribute this program.
+    # This project is provided as-is without warranty.
 
 # Imports
 import os
@@ -65,10 +59,11 @@ else:
     print("GUI not shown")
 
 # Extract Folders
+    # modified code from https://bit.ly/35ChcSB
 for item in os.listdir(dirSrc): # loop through items in dir
     if item.endswith(".zip"): # check for ".zip" extension
         file_name = os.path.abspath(dirSrc + "/" + item) # get full path of files
         zip_ref = zipfile.ZipFile(file_name) # create zipfile object
-        zip_ref.extractall(dirDest) # extract file to dir
+        zip_ref.extractall(dirDest + "/" + os.path.splitext(item)[0] ) # extract files to dir, ext from dir
         zip_ref.close() # close file
         # os.remove(file_name) # delete zipped file
