@@ -24,15 +24,24 @@ import zipfile
 from tkinter import *
 
 # Define variables
-boolShowGUI = True
-pathNew = "Shuffled packs"
+boolShowGUI = False
 boolAllowEmptyTextures = False
+dirHere = os.getcwd() # current location of this python script
+dirSrc = "C:/Users/skydi/Desktop/Code/_testfolder" # location of the source resource packs
+dirDest = os.path.join(dirSrc,"Shuffled Packs") # where the shuffled packs will be placed
+dirTemp = os.path.join(dirSrc,"Temp") # temp directory
+intPackFormat = 5
 
 # Create folders if they don't already exist
 try:
-    os.mkdir(pathNew)
+    os.mkdir(dirFrom + "/" + dirDest)
 except:
-    print("pathNew already exists")
+    print("Path [" + dirDest + "] already exists")
+
+try:
+    os.mkdir(dirFrom + "/" + dirTemp)
+except:
+    print("Path [" + dirTemp + "] already exists")
 
 # Create the GUI
 if boolShowGUI == True:
@@ -53,4 +62,13 @@ if boolShowGUI == True:
 
 else:
 
-    print("gui not shown")
+    print("GUI not shown")
+
+# Extract Folders
+for item in os.listdir(dirSrc): # loop through items in dir
+    if item.endswith(".zip"): # check for ".zip" extension
+        file_name = os.path.abspath(dirSrc + "/" + item) # get full path of files
+        zip_ref = zipfile.ZipFile(file_name) # create zipfile object
+        zip_ref.extractall(dirDest) # extract file to dir
+        zip_ref.close() # close file
+        # os.remove(file_name) # delete zipped file

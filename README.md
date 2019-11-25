@@ -9,3 +9,5 @@ https://www.python.org/downloads/
 WHEN SETTING UP PYTHON, MAKE SURE TO CHECK "Add Python __ to PATH"
 SEE THIS IMAGE FOR MORE INFORMATION:
 https://datatofish.com/wp-content/uploads/2018/10/0001_add_Python_to_Path.png
+
+This project is provided as-is without warranty.
