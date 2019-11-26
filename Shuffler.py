@@ -5,41 +5,35 @@
 # Credits
     # Made by Tyler Jones (SkydiverTyler)
     # https://twitter.com/skydivertyler
-    # Please credit me, and link to the github project,
-    # if you use this in a YouTube video,
-    # or if you redistribute this program.
-    # This project is provided as-is without warranty.
+    # Please credit me.
 
 # Imports
 import os
+from os import path as p
 from os.path import expanduser
 import subprocess
 import zipfile
 from tkinter import *
+import shutil
+import random # for pack naming
+from datetime import datetime # for pack naming
 
 # Define variables
 boolShowGUI = False
 boolAllowEmptyTextures = False
 dirHere = os.getcwd() # current location of this python script
 dirSrc = "C:/Users/skydi/Desktop/Code/_testfolder" # location of the source resource packs
-dirDest = os.path.join(dirSrc,"Shuffled Packs") # where the shuffled packs will be placed
-dirTemp = os.path.join(dirSrc,"Temp") # temp directory
-intPackFormat = 5
+dirDest = p.join( dirSrc,"Shuffled Packs" ) # where the shuffled packs will be placed
+dirTemp = p.join( dirSrc,"Generating pack, please wait" ) # temp directory
 
-# Create folders if they don't already exist
-try:
-    os.mkdir(dirFrom + "/" + dirDest)
-except:
-    print("Path [" + dirDest + "] already exists")
-
-try:
-    os.mkdir(dirFrom + "/" + dirTemp)
-except:
-    print("Path [" + dirTemp + "] already exists")
+sec = r"\u00A7" # the section symbol, for Minecraft text formatting
+strPackDesc = sec + "7Shuffle your resource packs: " + sec + "3" + sec + "lgit.io/JeXLV"
+intPackFormat = 4
+intPackID = datetime.now()
+strPackName = sec + "6Shuffled Resource Pack!" + sec + "r[ ID:" + str(intPackID) + "]"
 
 # Create the GUI
 if boolShowGUI == True:
-
     root = Tk()
     root.configure(background='white')
 
@@ -55,15 +49,40 @@ if boolShowGUI == True:
     root.mainloop()
 
 else:
-
     print("GUI not shown")
 
 # Extract Folders
     # modified code from https://bit.ly/35ChcSB
-for item in os.listdir(dirSrc): # loop through items in dir
-    if item.endswith(".zip"): # check for ".zip" extension
-        file_name = os.path.abspath(dirSrc + "/" + item) # get full path of files
-        zip_ref = zipfile.ZipFile(file_name) # create zipfile object
-        zip_ref.extractall(dirDest + "/" + os.path.splitext(item)[0] ) # extract files to dir, ext from dir
-        zip_ref.close() # close file
-        # os.remove(file_name) # delete zipped file
+for item in os.listdir(dirSrc):
+    if item.endswith(".zip"):
+        file_name = p.abspath(
+            p.join(dirSrc, item)
+        )
+        z = zipfile.ZipFile(file_name)
+        print("Extracting " + item)
+        z.extractall(
+            p.join(dirTemp, p.splitext(item)[0])
+        )
+        z.close()
+        #shutil.rmtree(dirTemp)
+
+# # Creating a list of all the files in each direcrory
+# for path, subdirs, files in os.walk(dirTemp):
+#     for name in files:
+#         print( os.path.join(path, name) )
+
+# Write the Minecraft Meta file
+mcm = p.join(dirTemp,"pack.mcmeta")
+
+# try:
+#     os.remove(mcm)
+# except:
+#     print("The file pack.mcmeta already exists")
+
+t = open(mcm,"w")
+t.write( '{"pack": {"pack_format":' + str(intPackFormat) + ',"description": "' + strPackDesc + '"} }' )
+t.close()
+
+# Let the user know the pack has been generated
+print(strPackName)
+print()
