@@ -22,9 +22,11 @@ By default, the script looks for resource packs in the same folder it is placed 
 
 # Credit me, please
 
-```Resource Pack Shuffler by Tyler Jones (SkydiverTyler)
+```
+Resource Pack Shuffler by Tyler Jones (SkydiverTyler)
 Tyler's Twitter: https://twitter.com/skydivertyler
-Download the script: https://github.com/SkydiverTyler/ResourcePackShuffler```
+Download the script: https://github.com/SkydiverTyler/ResourcePackShuffler
+```
 
 Short link to this project: http://git.io/JeXLV
 
