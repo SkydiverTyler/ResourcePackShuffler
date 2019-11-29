@@ -15,7 +15,6 @@ import subprocess
 import zipfile
 from tkinter import *
 import shutil
-import random # for pack naming
 from datetime import datetime # for pack naming
 
 # Define variables
@@ -25,12 +24,28 @@ dirHere = os.getcwd() # current location of this python script
 dirSrc = "C:/Users/skydi/Desktop/Code/_testfolder" # location of the source resource packs
 dirDest = p.join( dirSrc,"Shuffled Packs" ) # where the shuffled packs will be placed
 dirTemp = p.join( dirSrc,"Generating pack, please wait" ) # temp directory
+dirDummy = p.join(dirDest, "assets", "minecraft") # remove when algorithm is created
 
 sec = r"\u00A7" # the section symbol, for Minecraft text formatting
 strPackDesc = sec + "7Shuffle your resource packs: " + sec + "3" + sec + "lgit.io/JeXLV"
 intPackFormat = 4
-intPackID = datetime.now()
-strPackName = sec + "6Shuffled Resource Pack!" + sec + "r[ ID:" + str(intPackID) + "]"
+strPackID = " (" + str(datetime.now()).replace(":","-").replace(".","-") + ")"
+strPackName = "Shuffled Pack" + strPackID
+
+print("")
+
+# Functions
+def cDir(thisDir): # create the neccesary folders
+    try:
+        os.makedirs(thisDir)
+    except:
+        print("Folder [" + thisDir + "] already exists")
+
+# Create folders
+cDir(dirSrc)
+cDir(dirDest)
+cDir(dirTemp)
+cDir(dirDummy)
 
 # Create the GUI
 if boolShowGUI == True:
@@ -72,16 +87,28 @@ for item in os.listdir(dirSrc):
 #         print( os.path.join(path, name) )
 
 # Write the Minecraft Meta file
-mcm = p.join(dirTemp,"pack.mcmeta")
-
-# try:
-#     os.remove(mcm)
-# except:
-#     print("The file pack.mcmeta already exists")
-
+mcm = p.join(dirDest,"pack.mcmeta")
 t = open(mcm,"w")
 t.write( '{"pack": {"pack_format":' + str(intPackFormat) + ',"description": "' + strPackDesc + '"} }' )
 t.close()
+
+# Create final resource pack zip folder
+
+# z = ( p.join(dirDest,strPackName + ".zip"),"w" )
+# for root, dirs, files in os.walk(dirTemp):
+#     for file in files:
+#         if file.endswith(".zip") == False:
+#             z.write( p.relpath( p.join(root, file) ) )
+print("")
+with zipfile.ZipFile( p.join( dirDest, strPackName + '.zip') , 'w') as z: # Location of the zip file
+    for folderName, subfolders, filenames in os.walk( dirDest ): # Location of the src assets and pack
+        print("FOLDER " + folderName)
+        for filename in filenames:
+            if filename.endswith(".zip") == False:
+                print("FILE " + filename)
+                filePath = os.path.join(folderName, filename) #create complete filepath of file in directory
+                print("REL " + p.relpath(filePath) )
+                z.write( p.relpath( filePath ) ) # Add file to zip
 
 # Let the user know the pack has been generated
 print(strPackName)
