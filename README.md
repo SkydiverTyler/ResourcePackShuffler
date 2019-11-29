@@ -20,6 +20,16 @@ By default, the script looks for resource packs in the same folder it is placed 
 
 **5. Run the script**
 
+If you shuffle resource packs with multiple pack formats, the created pack has a small chance to cause unexpected in-game results. There isn't an easy solution for this. Try to use resource packs with the same pack format.
+
+For more information, read through the History section here: https://minecraft.gamepedia.com/Resource_pack#History
+
+When creating the new pack.mcmeta file (this file tells Minecraft it's a resource pack), the shuffler will specify that the pack it creates uses the highest pack format number from what the source resource packs use.
+
+**6. Use the shuffled pack**
+
+To open your resource packs folder, open Minecraft. Navigate to Options > Resource Packs > Open Resource Pack Folder. Finally, move the shuffled pack into Minecraft's resource pack folder.
+
 # Credit me, please
 
 ```
@@ -38,7 +48,7 @@ Feel free to join my Discord server: https://discord.gg/k8xWgCK. I can't promise
 
 # Important notes
 
-You probably should not distribute the shuffled packs, and you cannot claim you made them. This is because the creators of the source resource packs own the original textures used to create the shuffled packs.
+You should not distribute the shuffled packs, and you cannot claim you made them. This is because the creators of the source resource packs own the original textures used to create the shuffled packs.
 
 That does not apply if you have created *all* of the source resource packs.
 
