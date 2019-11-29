@@ -16,7 +16,7 @@ Click the green 'Clone or download' button, then click 'Download ZIP'
 
 **4. Extract the 'Shuffler.py' script anywhere**
 
-By default, the script looks for resource packs in the same folder it is placed in. You can change where the script looks.
+By default, the script looks for resource packs in the same folder it is placed in. You can change where the script looks by editing the variables inside the python script, in your favorite text editor
 
 **5. Run the script**
 
