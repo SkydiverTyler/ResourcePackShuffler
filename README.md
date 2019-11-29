@@ -2,7 +2,7 @@
  *This is a Python script that shuffles Minecraft resource packs, creating cursed resource/texture packs.*
 
 # How to download and run
-**1. You need to install the latest version of Python to run the Shuffler.**
+**1. You need to install the latest version of Python (3.8 or higher) to run the Shuffler.**
 
 Get Python at: https://www.python.org/downloads/
 
@@ -21,17 +21,21 @@ By default, the script looks for resource packs in the same folder it is placed 
 **5. Run the script**
 
 # Credit me, please
-Made by Tyler Jones (SkydiverTyler)
 
-Twitter: https://twitter.com/skydivertyler
+```Resource Pack Shuffler by Tyler Jones (SkydiverTyler)
+Tyler's Twitter: https://twitter.com/skydivertyler
+Download the script: https://github.com/SkydiverTyler/ResourcePackShuffler```
 
-This project: https://github.com/SkydiverTyler/ResourcePackShuffler
+Short link to this project: http://git.io/JeXLV
 
 Please credit me, and link to this project, if you use this in a YouTube video, or if you redistribute this program.
 
 If you modify this program and redistribute, make it clear that you modified it.
 
+Feel free to join my Discord server: https://discord.gg/k8xWgCK. I can't promise I'll always be available, but I'll try to help if needed.
+
 # Important notes
+
 You probably should not distribute the shuffled packs, and you cannot claim you made them. This is because the creators of the source resource packs own the original textures used to create the shuffled packs.
 
 That does not apply if you have created *all* of the source resource packs.
