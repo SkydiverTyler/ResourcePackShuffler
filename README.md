@@ -35,7 +35,7 @@ To open your resource packs folder, open Minecraft. Navigate to Options > Resour
 ```
 Resource Pack Shuffler by SkydiverTyler
 Tyler's Twitter: https://twitter.com/skydivertyler
-Get the shuffler here: https://github.com/SkydiverTyler/ResourcePackShuffler
+Get the Shuffler here: https://github.com/SkydiverTyler/ResourcePackShuffler
 ```
 
 Short link to this project: http://git.io/JeXLV

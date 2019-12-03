@@ -13,37 +13,45 @@ from os import path as p
 from os.path import expanduser
 import subprocess
 import zipfile
-from tkinter import *
+# from tkinter import *
 import shutil
-from datetime import datetime # for pack naming
+from datetime import datetime # for pack id
 
-# Define variables
-boolShowGUI = False
-dirHere = os.getcwd() # current location of this python script
-dirSrc = "C:/Users/skydi/Desktop/Code/_testfolder" # location of the source resource packs
-dirDest = p.join( dirSrc,"Shuffled Packs" ) # where the shuffled packs will be placed
-dirTemp = p.join( dirSrc,"Generating pack - please wait" ) # temp directory
+# Variables you can change
+dirSrc = p.normpath(
+    "C:/Users/skydi/Desktop/Code/_testfolder" # put your custom source path here, inside quotes!
+) # the default is:
+    # os.getcwd()
+    # WITHOUT the # symbol
+dirDest = p.normpath(
+    p.join( dirSrc,"Shuffled Packs") # put your custom destination path here, inside quotes!
+) # the default is
+    # p.join( dirSrc,"Shuffled Packs")
+    # WITHOUT the # symbol 
+
+# Important variables: do NOT change anything below this point
+dirTemp = p.join( dirSrc,"Generating pack - please wait" )
 dirTempList = p.join(dirTemp,"Master file list")
 dirTempExtr = p.join(dirTemp,"Extracted packs")
 dirTempComp = p.join(dirTemp, "Assembling pack in here") # folder the shuffled pack will be assembled in
 dirTempCompDummy = p.join(dirTempComp, "assets", "minecraft") # remove when algorithm is created
+
 sec = r"\u00A7" # the section symbol, for Minecraft text formatting
 strPackDesc = sec + "7Shuffle your resource packs: " + sec + "3" + sec + "lgit.io/JeXLV"
 intPackFormat = 4
 strPackID = " (" + str(datetime.now()).replace(":","-").replace(".","-") + ")"
 strPackName = "Shuffled Pack" + strPackID
-masterFileList = set()
 
+dictMaster = dict() # the dictionary that will keep track of every file
+setMaster = set() # a set that keeps the unique paths included in all the packs
+
+# Create folders
 print()
-
-# Functions
-def cDir(thisDir): # create the neccesary folders
+def cDir(thisDir):
     try:
         os.makedirs(thisDir)
     except:
         print("Folder [" + thisDir + "] already exists")
-
-# Create folders
 cDir(dirSrc)
 cDir(dirDest)
 cDir(dirTemp)
@@ -52,44 +60,45 @@ cDir(dirTempExtr)
 cDir(dirTempComp)
 cDir(dirTempCompDummy)
 
-# Create the GUI
-if boolShowGUI == True:
-    root = Tk()
-    root.configure(background='white')
-    canv = Frame(root, padx=10, pady=10)
-    canv.pack(fill=BOTH)
-    lblPathNew = Label(canv, text="Folder to generate the shuffled packs in")
-    lblPathNew.pack()
-    txt1 = Entry(canv)
-    txt1.pack()
-    root.mainloop()
-else:
-    print("GUI hidden")
-
-# Extract Folders
-    # modified code from https://bit.ly/35ChcSB
-os.chdir(dirSrc) # change working directory to source directory
+# Extract Folders and Create File Dictionary
+os.chdir(dirSrc)
 for item in os.listdir( os.getcwd() ):
     if item.endswith(".zip"):
-        file_name = p.join(dirSrc, item)
-        z = zipfile.ZipFile(file_name)
+        f = p.join(dirSrc, item) # location of "example.zip"
+        z = zipfile.ZipFile(f) # zip file object of "example.zip"
+        name = p.splitext(item)[0] # "example"
+        nl = z.namelist().copy()
+
+        setMaster.update(nl) # log the contents into the master set
+        dictMaster[name] = nl # log the contents of the zip to the dictionary
+
         z.extractall(   # extract all zips to temp dir
-            p.join(dirTempExtr, p.splitext(item)[0])
+            p.join(dirTempExtr, name)
         )
-        z.extractall(dirTempList,
-            members=(member for member in z.namelist() if not member.endswith('.mcmeta')) # from https://bit.ly/35JlqYs
-        )
+
+        # z.extractall(dirTempList,
+        # members=(member for member in z.namelist() if not member.endswith('.mcmeta')) # from https://bit.ly/35JlqYs
+        # )
         print("Extracted [" + item + "]")
         z.close()
 
-# Get a list of all file names
-os.chdir(dirTempList)
-for folderName, subfolders, filenames in os.walk( dirTempComp ): # Location of the src assets and pack
-    for filename in filenames:
-        if filename.endswith(".zip") == False:
-            filePath = p.join(folderName, filename) #create complete filepath of file in directory
-            z.write( p.relpath( filePath ) ) # add file to zip
-            print("Zipped [" + p.relpath(filePath) + "]")
+dictMaster[strPackID] = sorted(list(setMaster)) # convert the master set into a list and add to dict
+
+txt = p.join(dirTemp,"dictionary.txt") # export the dictionary log - debug
+t = open(txt,"w")
+t.write(
+    str(dictMaster).replace("], ","],\n\n\n\n")
+)
+t.close
+print("Logged dictionary to [" + p.join(dirTemp, "dictionary.txt") + "]" )
+
+# # Get a list of all file names
+# os.chdir(dirTempList)
+# for folderName, subfolders, filenames in os.walk( dirTempList ): # Location of the src assets and pack
+#     for filename in filenames:
+#         filePath = p.relpath( p.join(folderName, filename) ) # create file path
+#         setFileList.add(filePath)
+#         print("Added [" + p.relpath(filePath) + "]")
 
 
 # Actually shuffle the packs
