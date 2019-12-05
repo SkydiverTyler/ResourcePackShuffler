@@ -16,6 +16,7 @@ import zipfile
 # from tkinter import *
 import shutil
 from datetime import datetime # for pack id
+import random
 
 # Variables you can change
 dirSrc = p.normpath(
@@ -42,14 +43,19 @@ intPackFormat = 4
 strPackID = " (" + str(datetime.now()).replace(":","-").replace(".","-") + ")"
 strPackName = "Shuffled Pack" + strPackID
 
-dictMaster = dict() # the dictionary that will keep track of every file
+dictFiles = dict() # the dictionary that will keep track of every file
 setMaster = set() # a set that keeps the unique paths included in all the packs
+listMaster = list() # setMaster, but in a list and sorted
+
+
+
 
 # Create folders
 print()
 def cDir(thisDir):
     try:
         os.makedirs(thisDir)
+        print("Created folder [" + thisDir + "]")
     except:
         print("Folder [" + thisDir + "] already exists")
 cDir(dirSrc)
@@ -70,40 +76,29 @@ for item in os.listdir( os.getcwd() ):
         nl = z.namelist().copy()
 
         setMaster.update(nl) # log the contents into the master set
-        dictMaster[name] = nl # log the contents of the zip to the dictionary
+        dictFiles[name] = nl # log the contents of the zip to the dictionary
 
         z.extractall(   # extract all zips to temp dir
             p.join(dirTempExtr, name)
         )
-
         # z.extractall(dirTempList,
         # members=(member for member in z.namelist() if not member.endswith('.mcmeta')) # from https://bit.ly/35JlqYs
         # )
         print("Extracted [" + item + "]")
         z.close()
 
-dictMaster[strPackID] = sorted(list(setMaster)) # convert the master set into a list and add to dict
+listMaster = sorted(list(setMaster)) # convert the master set into a sorted list
+
 
 txt = p.join(dirTemp,"dictionary.txt") # export the dictionary log - debug
 t = open(txt,"w")
-t.write(
-    str(dictMaster).replace("], ","],\n\n\n\n")
-)
+t.write(str(listMaster) + "\n\n\n\n\n")
+t.write(str(dictFiles).replace("], ","],\n\n\n\n\n"))
 t.close
 print("Logged dictionary to [" + p.join(dirTemp, "dictionary.txt") + "]" )
 
-# # Get a list of all file names
-# os.chdir(dirTempList)
-# for folderName, subfolders, filenames in os.walk( dirTempList ): # Location of the src assets and pack
-#     for filename in filenames:
-#         filePath = p.relpath( p.join(folderName, filename) ) # create file path
-#         setFileList.add(filePath)
-#         print("Added [" + p.relpath(filePath) + "]")
-
-
-# Actually shuffle the packs
-
 # Write the Minecraft Meta file
+    #todo - check formats of all the packs and display an error if more than one format
 mcm = p.join(dirTempComp,"pack.mcmeta")
 t = open(mcm,"w")
 t.write( '{"pack": {"pack_format":' + str(intPackFormat) + ',"description": "' + strPackDesc + '"} }' )
@@ -113,6 +108,31 @@ dummyfile = p.join(dirTempCompDummy,"test.txt")
 t = open(dummyfile,"w")
 t.write("lmao")
 t.close()
+
+# Actually shuffle the packs
+for i in listMaster:
+    tempList = []
+    if str(i).endswith(".mcmeta") == False:
+        for j, k in dictFiles.items():
+            if i in k:
+                print("[" + i + "] is in [" + j + "]")
+                tempList.append( p.join(j,i) )
+        chosenFile = random.choice(tempList)
+        print("Chose [" + chosenFile + "] as the random texture or file!")
+        chosenMeta = chosenFile + ".mcmeta"
+        copyTo = p.join(dirTempComp,i)
+
+        try:
+            shutil.copy( p.join( dirTempExtr, chosenFile) , copyTo ) # copy file to final location
+            print("Copied chosen file to [" + copyTo + "]")
+            try:
+                shutil.copy( p.join( dirTempExtr, chosenMeta) , copyTo + ".mcmeta" ) # copy the associated .mcmeta file if it exists
+                print("Meta file ["+chosenMeta+"] copied to same location")   
+            except:
+                pass     
+        except:
+            cDir(copyTo) # create the folder if it's not a file
+
 
 # Create final resource pack zip folder
 os.chdir(dirTempComp) # change working dir to compilation dir
