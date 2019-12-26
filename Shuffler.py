@@ -1,13 +1,13 @@
 # IF YOU SEE THIS, AND YOU ARE TRYING TO RUN THE SHUFFLER,
 # PLEASE OPEN THE "README.MD" FILE IN A TEXT EDITOR
-# FOR HELP
+# FOR INSTRUCTIONS
 
 # Credits
     # Made by Tyler Jones (SkydiverTyler)
     # https://twitter.com/skydivertyler
     # Please credit me.
 
-# Imports
+# Imports (don't change these)
 import os
 from os import path as p
 from os.path import expanduser
@@ -17,35 +17,65 @@ import zipfile
 import shutil
 from datetime import datetime # for pack id
 import random
+import time
 
-# Variables you can change
+
+
+
+# Variables you can change are below:
+
+intPackFormat = 4
+    # The default is 4
+
+    # If the source packs were compatible with the Minecraft version
+    # you are using, then the shuffled pack should be compatible
+    # no matter what Minecraft tells you.
+    # For more information on pack formats, see
+    # https://minecraft.gamepedia.com/Resource_pack#History
+
 dirSrc = p.normpath(
-    "C:/Users/skydi/Desktop/Code/_testfolder" # put your custom source path here, inside quotes!
-) # the default is:
-    # os.getcwd()
+    p.dirname(p.abspath(__file__))
+)   # Paste your source folder path above, then put it inside quotes!
+    # The default is:
+    # str(os.getcwd())
     # WITHOUT the # symbol
+
 dirDest = p.normpath(
-    p.join( dirSrc,"Shuffled Packs") # put your custom destination path here, inside quotes!
-) # the default is
+    p.join( dirSrc,"Shuffled Packs") 
+)   # Paste your destination folder path above, then put it inside quotes!
+    # The default is
     # p.join( dirSrc,"Shuffled Packs")
     # WITHOUT the # symbol 
 
+noUniques = False
+    # The default is False.
+    # In this case, every file will be merged and shuffled.
+    
+    # If you change this to True (case-sensitive),
+    # textures that only exist in one resource pack will not be used.
+    # Less textures will be in the final shuffled pack overall,
+    # but each texture will have a chance to be different, every time you run the Shuffler.
+
+
+
+
+
+
 # Important variables: do NOT change anything below this point
+
 dirTemp = p.join( dirSrc,"Generating pack - please wait" )
-dirTempList = p.join(dirTemp,"Master file list")
 dirTempExtr = p.join(dirTemp,"Extracted packs")
 dirTempComp = p.join(dirTemp, "Assembling pack in here") # folder the shuffled pack will be assembled in
-dirTempCompDummy = p.join(dirTempComp, "assets", "minecraft") # remove when algorithm is created
+# dirTempCompDummy = p.join(dirTempComp, "assets", "minecraft") # remove when algorithm is created
 
 sec = r"\u00A7" # the section symbol, for Minecraft text formatting
-strPackDesc = sec + "7Shuffle your resource packs: " + sec + "3" + sec + "lgit.io/JeXLV"
-intPackFormat = 4
+strPackDesc = sec + "7Shuffle your resource packs: " + sec + "3" + sec + "l" + "git.io/JeXLV"
 strPackID = " (" + str(datetime.now()).replace(":","-").replace(".","-") + ")"
 strPackName = "Shuffled Pack" + strPackID
 
 dictFiles = dict() # the dictionary that will keep track of every file
-setMaster = set() # a set that keeps the unique paths included in all the packs
-listMaster = list() # setMaster, but in a list and sorted
+setMaster = set() # a set that keeps the unique paths
+listMaster = list() # setMaster, but in a list and later sorted
 
 
 
@@ -61,10 +91,9 @@ def cDir(thisDir):
 cDir(dirSrc)
 cDir(dirDest)
 cDir(dirTemp)
-cDir(dirTempList)
 cDir(dirTempExtr)
 cDir(dirTempComp)
-cDir(dirTempCompDummy)
+# cDir(dirTempCompDummy)
 
 # Extract Folders and Create File Dictionary
 os.chdir(dirSrc)
@@ -81,14 +110,11 @@ for item in os.listdir( os.getcwd() ):
         z.extractall(   # extract all zips to temp dir
             p.join(dirTempExtr, name)
         )
-        # z.extractall(dirTempList,
-        # members=(member for member in z.namelist() if not member.endswith('.mcmeta')) # from https://bit.ly/35JlqYs
-        # )
+
         print("Extracted [" + item + "]")
         z.close()
 
 listMaster = sorted(list(setMaster)) # convert the master set into a sorted list
-
 
 txt = p.join(dirTemp,"dictionary.txt") # export the dictionary log - debug
 t = open(txt,"w")
@@ -98,16 +124,16 @@ t.close
 print("Logged dictionary to [" + p.join(dirTemp, "dictionary.txt") + "]" )
 
 # Write the Minecraft Meta file
-    #todo - check formats of all the packs and display an error if more than one format
+    #todo - check formats of all the packs and display an error if more than one format exists
 mcm = p.join(dirTempComp,"pack.mcmeta")
 t = open(mcm,"w")
 t.write( '{"pack": {"pack_format":' + str(intPackFormat) + ',"description": "' + strPackDesc + '"} }' )
 t.close()
 
-dummyfile = p.join(dirTempCompDummy,"test.txt")
-t = open(dummyfile,"w")
-t.write("lmao")
-t.close()
+# dummyfile = p.join(dirTempCompDummy,"test.txt")
+# t = open(dummyfile,"w")
+# t.write("lmao")
+# t.close()
 
 # Actually shuffle the packs
 for i in listMaster:
@@ -117,21 +143,46 @@ for i in listMaster:
             if i in k:
                 print("[" + i + "] is in [" + j + "]")
                 tempList.append( p.join(j,i) )
-        chosenFile = random.choice(tempList)
-        print("Chose [" + chosenFile + "] as the random texture or file!")
-        chosenMeta = chosenFile + ".mcmeta"
-        copyTo = p.join(dirTempComp,i)
+        
+        if noUniques == False:
+            chosenFile = random.choice(tempList)
+            print("Chose [" + chosenFile + "] as the random texture or file!")
+            chosenMeta = chosenFile + ".mcmeta"
+            copyTo = p.join(dirTempComp,i)
 
-        try:
-            shutil.copy( p.join( dirTempExtr, chosenFile) , copyTo ) # copy file to final location
-            print("Copied chosen file to [" + copyTo + "]")
             try:
-                shutil.copy( p.join( dirTempExtr, chosenMeta) , copyTo + ".mcmeta" ) # copy the associated .mcmeta file if it exists
-                print("Meta file ["+chosenMeta+"] copied to same location")   
+                shutil.copy( p.join( dirTempExtr, chosenFile) , copyTo ) # copy file to final location
+                print("Copied chosen file to [" + copyTo + "]")
+                try:
+                    shutil.copy( p.join( dirTempExtr, chosenMeta) , copyTo + ".mcmeta" ) # copy the associated .mcmeta file if it exists
+                    print("Meta file ["+chosenMeta+"] copied to same location")   
+                except:
+                    pass     
             except:
-                pass     
-        except:
-            cDir(copyTo) # create the folder if it's not a file
+                cDir(copyTo) # create the folder if it's not a file
+
+        else:   # if noUniques is True
+            if len(tempList) >= 2:
+
+                chosenFile = random.choice(tempList)
+                print("Chose [" + chosenFile + "] as the random texture or file!")
+                chosenMeta = chosenFile + ".mcmeta"
+                copyTo = p.join(dirTempComp,i)
+
+                try:
+                    shutil.copy( p.join( dirTempExtr, chosenFile) , copyTo ) # copy file to final location
+                    print("Copied chosen file to [" + copyTo + "]")
+                    try:
+                        shutil.copy( p.join( dirTempExtr, chosenMeta) , copyTo + ".mcmeta" ) # copy the associated .mcmeta file if it exists
+                        print("Meta file ["+chosenMeta+"] copied to same location")   
+                    except:
+                        pass     
+                except:
+                    cDir(copyTo) # create the folder if it's not a file
+            
+            else:
+                print("Skipped [" + i + "] because it only appears once")
+        
 
 
 # Create final resource pack zip folder
@@ -144,7 +195,14 @@ with zipfile.ZipFile( p.join( dirDest, strPackName + '.zip') , 'w') as z: # Loca
                 z.write( p.relpath( filePath ) ) # add file to zip
                 print("Zipped [" + p.relpath(filePath) + "]")
 
+
+os.chdir(dirSrc) # change directory, so that the temp dir can be deleted
+
+shutil.rmtree(dirTemp) # remove the temp folder
+
 # Let the user know the pack has been generated
 print("")
-print("Success! [" +strPackName + "] created.")
+print("\tSuccess! [" +strPackName + "] created.")
 print("")
+
+time.sleep(20)

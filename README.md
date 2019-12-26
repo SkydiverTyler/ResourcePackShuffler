@@ -20,15 +20,21 @@ By default, the script looks for resource packs in the same folder it is placed 
 
 **5. Run the script**
 
-If you shuffle resource packs with multiple pack formats, the created pack has a small chance to cause unexpected in-game results. There isn't an easy solution for this. Try to use resource packs with the same pack format.
+Open the shuffler.py file with Python.
 
-For more information, read through the History section here: https://minecraft.gamepedia.com/Resource_pack#History
+If you shuffle resource packs with multiple pack formats, the created pack has a small chance to cause unexpected in-game results, or not work. There isn't an easy solution to fix this. Try to use resource packs with the same pack format.
 
-When creating the new pack.mcmeta file (this file tells Minecraft it's a resource pack), the shuffler will specify that the pack it creates uses the highest pack format number from what the source resource packs use.
+For more information on pack formats, read through the History section here: https://minecraft.gamepedia.com/Resource_pack#History
+
+If all of the source packs are compatible with the Minecraft version you are using, then the shuffled pack should be compatible no matter what Minecraft tells you.
+
+If Minecraft is telling you the packs are incompatable, but you know the source packs should be compatable, you can change the shuffler's intPackFormat variable. Read the link above for more information on what number to use. This only tells Minecraft what format the shuffled pack should be in, and does not have any effect on the compatibility of the shuffled pack's contents.
 
 **6. Use the shuffled pack**
 
 To open your resource packs folder, open Minecraft. Navigate to Options > Resource Packs > Open Resource Pack Folder. Finally, move the shuffled pack into Minecraft's resource pack folder.
+
+If you put multiple shuffled packs into Minecraft's resource pack folder, the most recently created shuffled pack will be closest to the bottom of the selection menu.
 
 # Credit me, please
 
@@ -44,7 +50,7 @@ Please credit me, and link to this project, wherever you showcase or redistribut
 
 If you modify this project, make it clear that you modified it.
 
-Feel free to join my Discord server: https://discord.gg/k8xWgCK. I can't promise I'll always be available, but I'll try to help if needed.
+Feel free to join my Discord server: https://discord.gg/k8xWgCK.
 
 # Important notes
 
